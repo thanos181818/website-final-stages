@@ -1,0 +1,106 @@
+{
+    "video_metadata": {
+      "video_name": "video_1.mp4",
+      "is_fake": 1,
+      "fake_confidence": 0.93,
+      "video_length": "00:05:30",
+      "frame_count": 108000,
+      "frame_rate": 30,
+      "resolution": "1920x1080",
+      "aspect_ratio": "16:9",
+      "file_size": "500MB"
+    },
+    "anomalies": [
+      {
+        "anomaly_id": 1,
+        "name": "Texture and Skin Inconsistencies",
+        "timestamps": [[10, 15, 30], [11, 0, 45]],
+        "anomaly_scores": [0.85, 0.87]
+      },
+      {
+        "anomaly_id": 2,
+        "name": "Lighting and Shadow Mismatches",
+        "timestamps": [[9, 10, 0], [10, 45, 0]],
+        "anomaly_scores": [0.92, 0.88]
+      },
+      {
+        "anomaly_id": 3,
+        "name": "Facial Feature Misalignments",
+        "timestamps": [[14, 5, 30], [15, 20, 45]],
+        "anomaly_scores": [0.93, 0.89]
+      },
+      {
+        "anomaly_id": 4,
+        "name": "Resolution Artifacts",
+        "timestamps": [[10, 0, 0], [11, 15, 30]],
+        "anomaly_scores": [0.80, 0.85]
+      },
+      {
+        "anomaly_id": 5,
+        "name": "Inconsistent Facial Movements",
+        "timestamps": [[8, 15, 0], [9, 30, 0]],
+        "anomaly_scores": [0.87, 0.91]
+      },
+      {
+        "anomaly_id": 6,
+        "name": "Blinking and Eye Movement Anomalies",
+        "timestamps": [[14, 0, 0], [14, 30, 45]],
+        "anomaly_scores": [0.90, 0.86]
+      },
+      {
+        "anomaly_id": 7,
+        "name": "Lip Sync Issues",
+        "timestamps": [[10, 10, 30], [11, 45, 0]],
+        "anomaly_scores": [0.80, 0.83]
+      },
+      {
+        "anomaly_id": 8,
+        "name": "Ambient Sound Mismatches",
+        "timestamps": [[13, 25, 0], [14, 0, 45]],
+        "anomaly_scores": [0.82, 0.79]
+      },
+      {
+        "anomaly_id": 9,
+        "name": "Noise Patterns in Frequency Domain",
+        "timestamps": [[9, 15, 30], [10, 45, 15]],
+        "anomaly_scores": [0.88, 0.84]
+      },
+      {
+        "anomaly_id": 10,
+        "name": "Compression Artifacts",
+        "timestamps": [[15, 0, 0], [15, 40, 45]],
+        "anomaly_scores": [0.91, 0.93]
+      },
+      {
+        "anomaly_id": 11,
+        "name": "Micro-Expression Mismatches",
+        "timestamps": [[8, 30, 0], [9, 45, 30]],
+        "anomaly_scores": [0.77, 0.80]
+      },
+      {
+        "anomaly_id": 12,
+        "name": "Identity Discrepancies",
+        "timestamps": [[12, 15, 30], [13, 10, 45]],
+        "anomaly_scores": [0.85, 0.89]
+      },
+      {
+        "anomaly_id": 13,
+        "name": "Temporal Artifacts",
+        "timestamps": [[11, 25, 0], [12, 0, 30]],
+        "anomaly_scores": [0.86, 0.83]
+      },
+      {
+        "anomaly_id": 14,
+        "name": "Head and Body Mismatches",
+        "timestamps": [[10, 10, 30], [11, 25, 45]],
+        "anomaly_scores": [0.90, 0.87]
+      },
+      {
+        "anomaly_id": 15,
+        "name": "General Artifacts",
+        "timestamps": [[9, 50, 30], [10, 45, 0]],
+        "anomaly_scores": [0.88, 0.92]
+      }
+    ]
+  }
+  
