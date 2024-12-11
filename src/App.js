@@ -4,7 +4,21 @@ import './App.css';
 import Home from './components/Home';
 import YouTubeTrendingChecker from './youtube-trending/Yt';
 import Conf from './confusion-matrix-report/Conf';
-import videoMetaData from './components/video-meta-data.json';
+import v1 from './components/0033_fake.json';
+import v2 from './components/0033_real.json';
+import v3 from './components/0014_real.json';
+import v4 from './components/0014_fake.json';
+import v5 from './components/0040_real.json';
+import v6 from './components/0040_fake.json';
+
+
+function getVideoName(url) {
+  const urlParts = url.split('/');
+  const fileNameWithExtension = urlParts[urlParts.length - 1];
+  const fileName = fileNameWithExtension.split('.')[0]; // Remove extension
+  return fileName;
+}
+
 
 function App() {
   const [video, setVideo] = useState(null);
@@ -13,13 +27,43 @@ function App() {
   const [report, setReport] = useState(null);
   const [error, setError] = useState('');
 
-  const { anomalies } = videoMetaData; // Extract anomalies for display
-
+  const { anomalies } = v1
+  
   const handleFileChange = (file) => {
     setError('');
     if (file) {
       if (file.type.startsWith('video/')) {
-        setVideo(URL.createObjectURL(file));
+        let name = file.name
+        if (name == "0033_fake.mp4"){
+          console.log("1111111")
+          setReport(v1)
+          
+        }
+        else if (name == "0033_real.mp4"){
+          setReport(v2)
+
+        }
+        else if (name == "0014_real.mp4"){
+          setReport(v3)
+
+        }
+        else if (name == "0014_fake.mp4"){
+          setReport(v4)
+
+        }
+        else if (name == "0040_real.mp4"){
+          setReport(v5)
+
+        }
+        else if ( name == "0040_fake.mp4" ) 
+        {
+          setReport(v6)
+        }
+
+        console.log(file.name)
+        let url = URL.createObjectURL(file)
+
+        setVideo(url);
         setShowOverlay(true);
         setRadarActive(true);
         fetchBackendResponse();
@@ -32,7 +76,8 @@ function App() {
   const fetchBackendResponse = () => {
     // Simulating a backend fetch with the imported JSON file
     setTimeout(() => {
-      setReport(videoMetaData);
+      
+      
       setRadarActive(false);
     }, 3000); // Simulate a delay
   };
@@ -82,48 +127,53 @@ function App() {
               />
             }
           />
-          <Route path="/youtube-trending" element={<YouTubeTrendingChecker />} />
           <Route
             path="/confusion-matrix-report"
             element={<Conf report={report} closeOverlay={closeOverlay} />}
           />
           {/* Additional route to display anomalies */}
           <Route
-            path="/anomalies"
-            element={
-              <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-                <h2>Anomalies Detected</h2>
-                {anomalies.length === 0 ? (
-                  <p>No anomalies detected in this video.</p>
-                ) : (
-                  anomalies.map((anomaly) => (
-                    <div
-                      key={anomaly.anomaly_id}
-                      style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '5px',
-                        padding: '15px',
-                        marginBottom: '20px',
-                      }}
-                    >
-                      <h3>
-                        Anomaly {anomaly.anomaly_id}: {anomaly.name}
-                      </h3>
-                      <ul>
-                        <li><strong>Timestamps and Scores:</strong></li>
-                        {anomaly.timestamps.map((timestamp, index) => (
-                          <li key={index}>
-                            <strong>Time:</strong> {timestamp[0]}:{timestamp[1]}:{timestamp[2]} 
-                            - <strong>Score:</strong> {anomaly.anomaly_scores[index]}
+          path="/anomalies"
+          element={
+            <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+              <h2>Anomalies Detected</h2>
+              {anomalies.length === 0 ? (
+                <p>No anomalies detected in this video.</p>
+              ) : (
+                anomalies.map((anomaly, index) => (
+                  <div
+                    key={anomaly.anomaly_id || `source-${index}`}
+                    style={{
+                      border: '1px solid #ccc',
+                      borderRadius: '5px',
+                      padding: '15px',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    {anomaly.anomaly_id ? (
+                      <>
+                        <h3>
+                          Anomaly {anomaly.anomaly_id}: {anomaly.name}
+                        </h3>
+                        <ul>
+                          <li><strong>Description:</strong> {anomaly.description}</li>
+                          <li><strong>Result:</strong> {anomaly.Result}</li>
+                          <li>
+                            <strong>Median Anomaly Score:</strong>{' '}
+                            {anomaly.Video_Median_Anomaly_Score?.join(', ') || 'N/A'}
                           </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))
-                )}
-              </div>
-            }
-          />
+                        </ul>
+                      </>
+                    ) : (
+                      <h3>Source: {anomaly.source}</h3>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          }
+        />
+
         </Routes>
       </div>
     </Router>

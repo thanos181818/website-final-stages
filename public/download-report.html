@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection Report</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .report-section {
+      margin-bottom: 30px;
+    }
+
+    .report-section h2 {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    .report-section p {
+      margin: 10px 0;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+
+    #graph-image {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-header">
+    <h1>Deepfake Detection Report</h1>
+  </div>
+
+  <!-- <div id="graph-container"> -->
+    <h2>Anomaly Graph</h2>
+    <img src="Screenshot (188).png" alt="Anomaly Graph">
+    <!-- <img src="Screenshot (170).png" alt="Anomaly Graph"> -->
+    <!-- <img src="Screenshot (189).png" alt="Anomaly Graph"> -->
+    <!-- <img src="Screenshot (188).png" alt="Anomaly Graph"> -->
+    <!-- <img src="Screenshot (188).png" alt="Anomaly Graph"> -->
+    <!-- <img src="Screenshot (188).png" alt="Anomaly Graph"> -->
+  <!-- </div> -->
+
+  <div id="report-content"></div>
+
+  <button id="download-btn" class="button">Download Report</button>
+
+  <script>
+    // Function to populate the report data dynamically
+    function generateReport() {
+      const reportContent = document.getElementById('report-content');
+      const graphImage = document.getElementById('graph-image');
+      
+      let reportData;
+      try {
+        reportData = JSON.parse(localStorage.getItem('reportData'));
+        console.log('Retrieved report data:', reportData);
+      } catch (error) {
+        console.error('Error parsing report data:', error);
+        alert('Error parsing report data. Check console for details.');
+        return;
+      }
+
+      if (!reportData) {
+        console.error('No report data found in localStorage');
+        alert('No report data found!');
+        return;
+      }
+
+      try {
+        // Create the video metadata section
+        let metadataHtml = '<div class="report-section"><h2>Video Metadata</h2>';
+        Object.entries(reportData.video_metadata).forEach(([key, value]) => {
+          metadataHtml += `<p><strong>${key.replace(/_/g, ' ')}:</strong> ${value}</p>`;
+        });
+        metadataHtml += '</div>';
+
+        // Create the anomalies section
+        let anomaliesHtml = '<div class="report-section"><h2>Anomalies Detected</h2>';
+        reportData.anomalies.forEach((anomaly) => {
+          anomaliesHtml += `<p><strong>${anomaly.name}:</strong></p>`;
+          anomaly.anomaly_scores.forEach((score, index) => {
+            anomaliesHtml += `<p>Score at ${anomaly.timestamps[index].join(':')}: ${score}</p>`;
+          });
+        });
+        anomaliesHtml += '</div>';
+
+        // Inject the report content into the HTML
+        reportContent.innerHTML = metadataHtml + anomaliesHtml;
+
+        // Set the graph image if available
+        if (reportData.graphImage) {
+          graphImage.src = reportData.graphImage;
+          document.getElementById('graph-container').style.display = 'block';
+        } else {
+          document.getElementById('graph-container').style.display = 'none';
+        }
+
+        console.log('Report generated successfully');
+      } catch (error) {
+        console.error('Error generating report:', error);
+        alert('Error generating report. Check console for details.');
+      }
+    }
+    
+    // Set up the download button
+    document.getElementById('download-btn').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      let reportData;
+      try {
+        reportData = JSON.parse(localStorage.getItem('reportData'));
+      } catch (error) {
+        console.error('Error parsing report data for PDF:', error);
+        alert('Error generating PDF. Check console for details.');
+        return;
+      }
+
+      doc.setFontSize(10);
+      doc.text("Deepfake Detection Report", 20, 20);
+      
+      doc.setFontSize(10);
+      doc.text("Video Metadata:", 20, 30);
+      let yOffset = 40;
+      Object.entries(reportData.video_metadata).forEach(([key, value]) => {
+        doc.text(`${key.replace(/_/g, ' ')}: ${value}`, 20, yOffset);
+        yOffset += 10;
+      });
+
+      doc.text("Anomalies Detected:", 20, yOffset + 10);
+      yOffset += 20;
+      reportData.anomalies.forEach((anomaly) => {
+        doc.text(`${anomaly.name}:`, 20, yOffset);
+        yOffset += 10;
+        anomaly.anomaly_scores.forEach((score, index) => {
+          doc.text(`Score at ${anomaly.timestamps[index].join(':')}: ${score}`, 20, yOffset);
+          yOffset += 10;
+        });
+      });
+
+      // Add graph image if available
+      if (reportData.graphImage) {
+        doc.addPage();
+        doc.text("Anomaly Graph", 20, 20);
+        doc.addImage(reportData.graphImage, 'PNG', 20, 30, 170, 100);
+      }
+
+      // Save the generated PDF with the specified name
+      doc.save('Deepfake_Detection_Report.pdf');
+    });
+    
+    // Check if data exists in localStorage and log it
+    const storedData = localStorage.getItem('reportData');
+    console.log('Data in localStorage:', storedData);
+
+    // Generate the report on page load
+    window.onload = generateReport;
+  </script>
+  <script>
+    // Sample report data
+    const sampleReportData = {
+      video_metadata: {
+        filename: "sample_video.mp4",
+        duration: "00:05:30",
+        resolution: "1920x1080"
+      },
+      anomalies: [
+        {
+          name: "Facial Inconsistency",
+          timestamps: [[0, 0, 15], [0, 1, 30]],
+          anomaly_scores: [0.75, 0.82]
+        }
+      ],
+      graphImage: "Screenshot (188).png"
+    };
+
+    // Set the sample data in localStorage if it doesn't exist
+    if (!localStorage.getItem('reportData')) {
+      localStorage.setItem('reportData', JSON.stringify(sampleReportData));
+      console.log('Sample data set in localStorage');
+    } else {
+      console.log('Data already exists in localStorage');
+    }
+  </script>
+</body>
+</html>
+

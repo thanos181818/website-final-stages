@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Conf.css";
 import tp1 from "./tp-1.png";
-import tp2 from "./tp-1.png";
+import tp2 from "./tp-2.png";
 import tp3 from "./tp-1.png";
 import tp4 from "./tp-1.png";
 import tp5 from "./tp-1.png";
@@ -14,11 +14,15 @@ const Conf = () => {
     { 
       photo: tp1, 
       modelName: "Model A", 
-      accuracy: (Math.random() * 100).toFixed(2),
-      precision: (Math.random() * 100).toFixed(2),
-      recall: (Math.random() * 100).toFixed(2),
-      f1Score: (Math.random() * 100).toFixed(2),
-      support: (Math.random() * 100).toFixed(0) 
+      accuracy: 0.98,
+      precision_fake: 0.97,
+      recall_fake: 1.00,
+      f1Score_fake: 0.98,
+      support_fake: 171,
+      precision_real: 1.00,
+      recall_real: 0.97,
+      f1Score_real: 0.98,
+      support_real: 193
     },
     { 
       photo: tp2, 
@@ -111,20 +115,36 @@ const Conf = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>Precision</td>
-                  <td>{photos[currentIndex].precision}%</td>
+                  <td>Precision(Fake)</td>
+                  <td>{photos[currentIndex].precision_fake}</td>
                 </tr>
                 <tr>
-                  <td>Recall</td>
-                  <td>{photos[currentIndex].recall}%</td>
+                  <td>Recall (Fake)</td>
+                  <td>{photos[currentIndex].recall_fake}</td>
                 </tr>
                 <tr>
-                  <td>F1-Score</td>
-                  <td>{photos[currentIndex].f1Score}%</td>
+                  <td>F1-Score (Fake)</td>
+                  <td>{photos[currentIndex].f1Score_fake}</td>
                 </tr>
                 <tr>
-                  <td>Support</td>
-                  <td>{photos[currentIndex].support}</td>
+                  <td>Support (Fake)</td>
+                  <td>{photos[currentIndex].support_fake}</td>
+                </tr>
+                <tr>
+                  <td>Precision (Real)</td>
+                  <td>{photos[currentIndex].precision_real}</td>
+                </tr>
+                <tr>
+                  <td>Recall (Real)</td>
+                  <td>{photos[currentIndex].recall_real}</td>
+                </tr>
+                <tr>
+                  <td>F1-Score( Real)</td>
+                  <td>{photos[currentIndex].f1Score_real}</td>
+                </tr>
+                <tr>
+                  <td>Support (Real)</td>
+                  <td>{photos[currentIndex].support_real}</td>
                 </tr>
               </tbody>
             </table>

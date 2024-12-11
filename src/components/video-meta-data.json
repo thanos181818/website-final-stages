@@ -1,7 +1,7 @@
 {
     "video_metadata": {
-      "video_name": "video_1.mp4",
-      "is_fake": 1,
+      "video_name": "0033_real.mp4",
+      "is_fake": 0,
       "fake_confidence": 0.93,
       "video_length": "00:05:30",
       "frame_count": 108000,
