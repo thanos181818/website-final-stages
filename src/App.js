@@ -4,6 +4,7 @@ import './App.css';
 import Home from './components/Home';
 import YouTubeTrendingChecker from './youtube-trending/Yt';
 import Conf from './confusion-matrix-report/Conf';
+import videoMetaData from './components/video-meta-data.json';
 
 function App() {
   const [video, setVideo] = useState(null);
@@ -11,6 +12,8 @@ function App() {
   const [radarActive, setRadarActive] = useState(true);
   const [report, setReport] = useState(null);
   const [error, setError] = useState('');
+
+  const { anomalies } = videoMetaData; // Extract anomalies for display
 
   const handleFileChange = (file) => {
     setError('');
@@ -27,26 +30,11 @@ function App() {
   };
 
   const fetchBackendResponse = () => {
+    // Simulating a backend fetch with the imported JSON file
     setTimeout(() => {
-      setReport({
-        video_metadata: {
-          video_name: "video_1.mp4",
-          is_fake: 1,
-          fake_confidence: 0.93,
-          video_length: "00:05:30",
-          frame_count: 108000,
-          frame_rate: 30,
-          resolution: "1920x1080",
-          aspect_ratio: "16:9",
-          file_size: "500MB",
-        },
-        anomalies: [
-          { anomaly_id: 1, name: "Texture and Skin Inconsistencies", score: 0.85 },
-          { anomaly_id: 2, name: "Lighting and Shadow Mismatches", score: 0.92 },
-        ],
-      });
+      setReport(videoMetaData);
       setRadarActive(false);
-    }, 3000);
+    }, 3000); // Simulate a delay
   };
 
   const closeOverlay = () => {
@@ -78,22 +66,64 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={
-            <Home
-              handleFileChange={handleFileChange}
-              handleDragOver={handleDragOver}
-              handleDrop={handleDrop}
-              video={video}
-              error={error}
-              showOverlay={showOverlay}
-              radarActive={radarActive}
-              report={report}
-              closeOverlay={closeOverlay}
-            />
-          } />
+          <Route
+            path="/"
+            element={
+              <Home
+                handleFileChange={handleFileChange}
+                handleDragOver={handleDragOver}
+                handleDrop={handleDrop}
+                video={video}
+                error={error}
+                showOverlay={showOverlay}
+                radarActive={radarActive}
+                report={report}
+                closeOverlay={closeOverlay}
+              />
+            }
+          />
           <Route path="/youtube-trending" element={<YouTubeTrendingChecker />} />
-          {/* Adding the Conf route */}
-          <Route path="/confusion-matrix-report" element={<Conf />} />
+          <Route
+            path="/confusion-matrix-report"
+            element={<Conf report={report} closeOverlay={closeOverlay} />}
+          />
+          {/* Additional route to display anomalies */}
+          <Route
+            path="/anomalies"
+            element={
+              <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+                <h2>Anomalies Detected</h2>
+                {anomalies.length === 0 ? (
+                  <p>No anomalies detected in this video.</p>
+                ) : (
+                  anomalies.map((anomaly) => (
+                    <div
+                      key={anomaly.anomaly_id}
+                      style={{
+                        border: '1px solid #ccc',
+                        borderRadius: '5px',
+                        padding: '15px',
+                        marginBottom: '20px',
+                      }}
+                    >
+                      <h3>
+                        Anomaly {anomaly.anomaly_id}: {anomaly.name}
+                      </h3>
+                      <ul>
+                        <li><strong>Timestamps and Scores:</strong></li>
+                        {anomaly.timestamps.map((timestamp, index) => (
+                          <li key={index}>
+                            <strong>Time:</strong> {timestamp[0]}:{timestamp[1]}:{timestamp[2]} 
+                            - <strong>Score:</strong> {anomaly.anomaly_scores[index]}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                )}
+              </div>
+            }
+          />
         </Routes>
       </div>
     </Router>

@@ -67,14 +67,12 @@ const Conf = () => {
     }
   ];
 
-  // Go to next model
   const nextModel = () => {
     if (currentIndex < photos.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
   };
 
-  // Go to previous model
   const prevModel = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
@@ -87,29 +85,57 @@ const Conf = () => {
         <button
           className="arrow left-arrow"
           onClick={prevModel}
-          disabled={currentIndex === 0}  // Disable if at the first model
+          disabled={currentIndex === 0}
         >
-          {"<"}
+          &#8592;
         </button>
         <div className="photo-box">
           <div className="model-details">
-            <p><strong>Model Name:</strong> {photos[currentIndex].modelName}</p>
+            <h2>{photos[currentIndex].modelName}</h2>
           </div>
           <img src={photos[currentIndex].photo} alt={`Photo ${currentIndex + 1}`} className="photo" />
+          
+          {/* Accuracy displayed here */}
           <div className="accuracy">
-            <p><strong>Accuracy:</strong> {photos[currentIndex].accuracy}%</p>
-            <p><strong>Precision:</strong> {photos[currentIndex].precision}%</p>
-            <p><strong>Recall:</strong> {photos[currentIndex].recall}%</p>
-            <p><strong>F1-Score:</strong> {photos[currentIndex].f1Score}%</p>
-            <p><strong>Support:</strong> {photos[currentIndex].support}</p>
+            <strong>Accuracy:</strong> {photos[currentIndex].accuracy}%
+          </div>
+          
+          {/* Table for other metrics */}
+          <div className="stats">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Precision</td>
+                  <td>{photos[currentIndex].precision}%</td>
+                </tr>
+                <tr>
+                  <td>Recall</td>
+                  <td>{photos[currentIndex].recall}%</td>
+                </tr>
+                <tr>
+                  <td>F1-Score</td>
+                  <td>{photos[currentIndex].f1Score}%</td>
+                </tr>
+                <tr>
+                  <td>Support</td>
+                  <td>{photos[currentIndex].support}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <button
           className="arrow right-arrow"
           onClick={nextModel}
-          disabled={currentIndex === photos.length - 1}  // Disable if at the last model
+          disabled={currentIndex === photos.length - 1}
         >
-          {">"}
+          &#8594;
         </button>
       </div>
     </div>
